@@ -1,63 +1,70 @@
 import React from "react";
 import styled from "styled-components";
 
-const Item = ({
-  index,
-  name,
-  cost,
-  value,
-  numOwned,
-  handleAttemptedPurchase,
-}) => {
-  const ref = React.useRef(null);
-
-  React.useEffect(() => {
-    if (index === 0) {
-      ref.current.focus();
-    }
-  }, [index]);
-
+const Item = ({ items, numCookies, purchasedItems, handleClickItem }) => {
   return (
-    <Wrapper ref={ref} onClick={handleAttemptedPurchase}>
-      <Left>
-        <Name>{name}</Name>
-        <Info>
-          Cost: {cost} cookie(s). Produces {value} cookies/second.
-        </Info>
-      </Left>
-      <Right>{numOwned}</Right>
+    <Wrapper>
+      {items.map((item, index) => {
+        return (
+          <ItemButton
+            key={Math.random() * 10000000000}
+            value={item.id}
+            index={index}
+            autoFocus={index === 0}
+            onClick={() => handleClickItem(item)}
+          >
+            <InfoBlock>
+              <ItemName>{item.name}</ItemName>
+              {index !== 3 ? (
+                <p>
+                  Cost: {item.cost} cookie(s). Produces {item.value}{" "}
+                  cookies/second.
+                </p>
+              ) : (
+                <p>
+                  Cost: {item.cost} cookie(s). Produces an extra {item.value}{" "}
+                  cookies/click.
+                </p>
+              )}
+            </InfoBlock>
+            <AmountBlock>
+              <h1>{purchasedItems[item.id]}</h1>
+            </AmountBlock>
+          </ItemButton>
+        );
+      })}
     </Wrapper>
   );
 };
 
-const Wrapper = styled.button`
-  width: 100%;
+const Wrapper = styled.div`
   display: flex;
-  align-items: center;
-  background: transparent;
+  flex-direction: column;
+  margin-top: 12px;
+`;
+
+const ItemButton = styled.button`
+  height: 100px;
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  background-color: transparent;
   border: none;
-  border-bottom: 1px solid #444;
-  color: #fff;
+  border-bottom: 2px solid gray;
+  padding: 10px 10px 10px 10px;
+  margin: 0;
+  color: #eaeaee;
+`;
+
+const ItemName = styled.h1`
   text-align: left;
-  padding: 15px 0;
 `;
 
-const Left = styled.div`
-  flex: 1;
-`;
+const InfoBlock = styled.div``;
 
-const Name = styled.h4`
-  font-size: 22px;
-`;
-
-const Info = styled.div`
-  color: #ccc;
-  font-size: 15px;
-`;
-
-const Right = styled.div`
-  font-size: 32px;
-  padding: 0 20px;
+const AmountBlock = styled.div`
+  margin-top: 10px;
+  text-align: right;
 `;
 
 export default Item;
