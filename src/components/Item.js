@@ -44,7 +44,7 @@ const Wrapper = styled.div`
 `;
 
 const ItemButton = styled.button`
-  height: 100px;
+  height: 80px;
   width: 400px;
   display: flex;
   justify-content: space-between;

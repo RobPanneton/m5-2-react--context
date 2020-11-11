@@ -1,47 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import Item from "./Item";
-import useInterval from "../hooks/use-interval.hook";
+
 import useKeydown from "../hooks/use-keydown";
 import useDocumentTitle from "../hooks/use-document-title";
-import usePersistedState from "../hooks/use-persisted-state";
-
+import { GameContext } from "./GameContext";
 import cookieSrc from "../cookie.svg";
 
-const items = [
-  { id: "cursor", name: "Cursor", cost: 10, value: 1 },
-  { id: "grandma", name: "Grandma", cost: 100, value: 10 },
-  { id: "farm", name: "Farm", cost: 1000, value: 80 },
-  { id: "megacursor", name: "Mega Cursor", cost: 50, value: 5 },
-];
-
 const Game = () => {
-  const [numCookies, setNumCookies] = usePersistedState(1000, "num-cookies");
-  const [purchasedItems, setPurchasedItems] = usePersistedState(
-    {
-      cursor: 0,
-      grandma: 0,
-      farm: 0,
-      megacursor: 0,
-    },
-    "purchased-items"
-  );
-
-  const calculateCookiesPerTick = (purchased) => {
-    let sum = 0;
-    Object.keys(purchased).forEach((item, index) => {
-      if (index !== 3) {
-        sum += purchased[item] * items[index].value;
-      }
-    });
-    return sum;
-  };
-
-  useInterval(() => {
-    const numOfGeneratedCookies = calculateCookiesPerTick(purchasedItems);
-    setNumCookies(numCookies + numOfGeneratedCookies);
-  }, 1000);
+  const {
+    items,
+    numCookies,
+    setNumCookies,
+    purchasedItems,
+    setPurchasedItems,
+  } = useContext(GameContext);
 
   const handleClickItem = (item) => {
     if (item.cost > numCookies) {
